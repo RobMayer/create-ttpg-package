@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "scripts": {
         "setup": "ttpg-helper setup",
-        "build": "ttpg-helper buildts"
+        "build": "tsc && ttpg-helper build"
     },
     "keywords": [],
     "author": "",

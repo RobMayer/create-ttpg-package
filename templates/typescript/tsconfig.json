@@ -4,6 +4,7 @@
         "lib": ["ES2023", "DOM"],
         "module": "commonjs",
         "strict": true,
+        "outDir": "./build",
         "useUnknownInCatchVariables": false
     },
     "include": ["./src/**/*.ts"]
