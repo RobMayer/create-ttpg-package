@@ -4,7 +4,7 @@ import * as fs from "fs/promises";
 import * as chalk from "colorette";
 import * as path from "path";
 import * as readline from "readline/promises";
-import { spawn } from "child_process";
+import { spawn } from "cross-spawn";
 import { v4 as uuid } from "uuid";
 
 const ASSET_DIRS = ["Fonts", "Models", "Sounds", "States", "Templates", "Textures", "Thumbnails"];
@@ -82,13 +82,15 @@ const buildProject = async () => {
     const projectTitle = await input.question(chalk.whiteBright("What is your packages title?"));
     if (projectTitle) {
         const suggestedPrdGuid = guid();
-        const prdGuid =
-            (await input.question(chalk.whiteBright(`Provide a production GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggestedPrdGuid)}]: `))) ?? suggestedPrdGuid;
+        const inputPrdGuid = (await input.question(chalk.whiteBright(`Provide a production GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggestedPrdGuid)}]: `))).trim();
+        const prdGuid = inputPrdGuid !== "" ? inputPrdGuid : suggestedPrdGuid;
         const suggstedDevGuid = guid();
-        const devGuid =
-            (await input.question(chalk.whiteBright(`Provide a development GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggstedDevGuid)}]: `))) ?? suggstedDevGuid;
+        const inputDevGuid = (await input.question(chalk.whiteBright(`Provide a development GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggstedDevGuid)}]: `))).trim();
+        const devGuid = inputDevGuid !== "" ? inputDevGuid : suggstedDevGuid;
         const suggestedTTPGPath = getSuggestedTTPGPath();
-        const ttpg_path = (await input.question(chalk.whiteBright(`What is your TTPG path ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))) ?? suggestedTTPGPath;
+        const input_ttpg_path = (await input.question(chalk.whiteBright(`What is your TTPG path ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))).trim();
+        const ttpg_path = input_ttpg_path !== "" ? input_ttpg_path : suggestedTTPGPath;
+        input.close();
         try {
             await Promise.all(ASSET_DIRS.map((dir) => fs.mkdir(path.join(projectDir, "assets", dir), { recursive: true })));
         } catch (e) {
@@ -152,7 +154,6 @@ const buildProject = async () => {
     } else {
         console.warn(chalk.yellowBright("No title was provided, you will need to run the setup script later"));
     }
-    input.close();
     await runInstaller();
 };
 

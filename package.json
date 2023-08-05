@@ -1,6 +1,6 @@
 {
   "name": "create-ttpg-package",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "",
   "bin": {
     "create-ttpg-package": "bin/index.js"
@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
     "@types/node": "^20.4.8",
     "@types/uuid": "^9.0.2",
     "typescript": "^5.1.6"
