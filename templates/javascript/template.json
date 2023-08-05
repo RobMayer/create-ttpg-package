@@ -1,0 +1,16 @@
+{
+    "name": "javascript-template",
+    "version": "0.0.1",
+    "scripts": {
+        "setup": "ttpg-helper setup",
+        "build": "ttpg-helper build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@tabletop-playground/api": "^0.36.0",
+        "@robmayer/ttpg-helper": "^1.0.0"
+    }
+  }
+  

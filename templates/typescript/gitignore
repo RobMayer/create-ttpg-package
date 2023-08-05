@@ -1,0 +1,18 @@
+/node_modules
+# production
+/build
+/bundles
+
+# local build for development
+/dev
+
+# transpiled files
+/dst
+
+# local build for production
+/prd
+
+# misc
+.DS_Store
+
+ttpgcfg.local.json

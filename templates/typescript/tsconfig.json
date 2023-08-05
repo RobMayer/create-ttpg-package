@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "lib": ["ES2023", "DOM"],
+        "module": "commonjs",
+        "strict": true,
+        "useUnknownInCatchVariables": false
+    },
+    "include": ["./src/**/*.ts"]
+}

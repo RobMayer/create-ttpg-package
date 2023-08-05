@@ -1,0 +1,29 @@
+{
+  "name": "create-ttpg-package",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "create-ttpg-package": "bin/index.js"
+  },
+  "files": [
+    "./bin",
+    "./templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "@types/uuid": "^9.0.2",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "colorette": "^2.0.20",
+    "cross-spawn": "^7.0.3",
+    "uuid": "^9.0.0"
+  }
+}
