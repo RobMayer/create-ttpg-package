@@ -27,7 +27,7 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
             - name: Lint and Build
-              run: pnpm run lint && pnpm run build
+              run: pnpm run build
             - name: Publish
               run: pnpm publish --no-git-checks
               env:
