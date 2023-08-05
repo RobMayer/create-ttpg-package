@@ -18,28 +18,9 @@ const TEMPLATE_ALIASES = {
 
 const SUPPORTED_TEMPLATES: (keyof typeof TEMPLATE_ALIASES)[] = ["javascript", "typescript", "ts", "js"];
 
-const projectName = process.argv[2];
-
-if (!projectName) {
-    console.error(chalk.redBright("Project Name is Required"));
-    process.exit(-1);
-}
-
-const projectSlug = projectName.split("/").pop() ?? projectName;
-
-const template = process.argv.indexOf("--template") > -1 ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
-
-if (!SUPPORTED_TEMPLATES.includes(template as keyof typeof TEMPLATE_ALIASES)) {
-    console.error(chalk.redBright(`unknown template '${template}'`));
-    process.exit(-1);
-}
-
-const projectDir = path.resolve(process.cwd(), projectSlug);
-const templateDir = path.resolve(__dirname, "..", "templates", TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES]);
-
-const runInstaller = async () => {
+const runInstaller = async (cwd: string) => {
     return new Promise((resolve, reject) => {
-        const child = spawn("yarn", ["install"], { stdio: "pipe", cwd: projectDir });
+        const child = spawn("yarn", ["install"], { stdio: "pipe", cwd });
         child.on("close", (code: number) => (code > 0 ? reject(code) : resolve(0)));
     });
 };
@@ -60,6 +41,25 @@ const buildProject = async () => {
         input: process.stdin,
         output: process.stdout,
     });
+
+    const projectName = process.argv[2] ?? (await input.question(chalk.whiteBright("Enter an identifier for your project (no spaces, please): ")));
+
+    if (!projectName) {
+        console.error(chalk.redBright("Project Name is Required"));
+        process.exit(-1);
+    }
+
+    const projectSlug = projectName.split("/").pop() ?? projectName;
+
+    const template = process.argv.indexOf("--template") > -1 ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
+
+    if (!SUPPORTED_TEMPLATES.includes(template as keyof typeof TEMPLATE_ALIASES)) {
+        console.error(chalk.redBright(`unknown template '${template}'`));
+        process.exit(-1);
+    }
+
+    const projectDir = path.resolve(process.cwd(), projectSlug);
+    const templateDir = path.resolve(__dirname, "..", "templates", TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES]);
 
     try {
         await fs.mkdir(projectDir, { recursive: true });
@@ -154,7 +154,7 @@ const buildProject = async () => {
     } else {
         console.warn(chalk.yellowBright("No title was provided, you will need to run the setup script later"));
     }
-    await runInstaller();
+    await runInstaller(projectDir);
 };
 
 buildProject()
