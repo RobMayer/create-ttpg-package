@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import fs from "fs/promises";
-import chalk from "colorette";
-import path from "path";
-import readline from "readline/promises";
+import * as fs from "fs/promises";
+import * as chalk from "colorette";
+import * as path from "path";
+import * as readline from "readline/promises";
 import { spawn } from "child_process";
 import { v4 as uuid } from "uuid";
 
