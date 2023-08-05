@@ -27,7 +27,7 @@ if (!projectName) {
 
 const projectSlug = projectName.split("/").pop() ?? projectName;
 
-const template = process.argv.indexOf("--template") ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
+const template = process.argv.indexOf("--template") > -1 ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
 
 if (!SUPPORTED_TEMPLATES.includes(template as keyof typeof TEMPLATE_ALIASES)) {
     console.error(chalk.redBright(`unknown template '${template}'`));
