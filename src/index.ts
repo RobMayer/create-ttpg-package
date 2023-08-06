@@ -142,7 +142,7 @@ const buildProject = async () => {
         const suggestedTTPGPath = await getSuggestedTTPGPath();
         const input_ttpg_path = autoConfirm
             ? suggestedTTPGPath
-            : (await input.question(chalk.whiteBright(`What is your TTPG path ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))).trim();
+            : (await input.question(chalk.whiteBright(`path to TTPG Package or PersistentDownloadDir directory ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))).trim();
         const ttpg_path = input_ttpg_path !== "" ? input_ttpg_path : suggestedTTPGPath;
 
         input.close();
