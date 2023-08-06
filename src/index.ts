@@ -45,7 +45,7 @@ const buildProject = async () => {
     const projectName = process.argv[2] ?? (await input.question(chalk.whiteBright("Enter an identifier for your project (no spaces, please): ")));
 
     if (!projectName) {
-        console.error(chalk.redBright("Project Name is Required"));
+        console.error(chalk.redBright("Project Title is Required"));
         process.exit(-1);
     }
 
@@ -124,6 +124,7 @@ const buildProject = async () => {
                     {
                         name: projectTitle,
                         slug: projectSlug,
+                        template,
                         guid: {
                             dev: devGuid,
                             prd: prdGuid,
@@ -140,11 +141,6 @@ const buildProject = async () => {
         if (ttpg_path) {
             try {
                 await fs.writeFile(path.join(projectDir, "ttpgcfg.local.json"), JSON.stringify({ ttpg_path }, null, 2), "utf-8");
-                try {
-                    await fs.symlink(path.join(projectDir, "dev"), path.join(path.resolve(ttpg_path), `${projectSlug}_dev`), "junction");
-                } catch (e) {
-                    console.warn(chalk.redBright("Could not symlink to ttpg folder, you will need to run the setup script"));
-                }
             } catch (e) {
                 console.warn(chalk.redBright("Could not write local config file, you will need to run the setup script"));
             }
@@ -154,7 +150,12 @@ const buildProject = async () => {
     } else {
         console.warn(chalk.yellowBright("No title was provided, you will need to run the setup script later"));
     }
-    await runInstaller(projectDir);
+    try {
+        await runInstaller(projectDir);
+    } catch (e) {
+        console.error(chalk.redBright("Could not run installer"));
+        throw e;
+    }
 };
 
 buildProject()

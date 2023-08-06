@@ -1,13 +1,9 @@
 /node_modules
 # production
 /build
-/bundles
 
 # local build for development
 /dev
-
-# local build for production
-/prd
 
 # misc
 .DS_Store

@@ -2,15 +2,19 @@
     "name": "javascript-template",
     "version": "0.0.1",
     "scripts": {
-        "setup": "ttpg-helper setup",
-        "build": "ttpg-helper build"
-    },
+        "setup": "ttpg-scripts setup",
+        "dev": "ttpg-scripts dev",
+        "clean": "ttpg-scripts clean",
+        "reset": "ttpg-scripts reset",
+        "build": "ttpg-scripts build",
+        "purge": "ttpg-scripts purge"
+      },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "@tabletop-playground/api": "^0.36.0",
-        "ttpg-helper": "^0.0.1"
+        "ttpg-scripts": "^1.0.0"
     }
   }
   
