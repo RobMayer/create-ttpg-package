@@ -52,8 +52,17 @@ const getSuggestedTTPGPath = async (): Promise<string | null> => {
             return path.resolve(process.env.HOME + "/Library/Application Support/Epic/TabletopPlayground/Package");
         }
     } else if (process.platform === "win32") {
+        // steam
         if (await pathExists("C:\\Program Files (x86)\\Steam\\steamapps\\common\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir")) {
             return path.resolve("C:\\Program Files (x86)\\Steam\\steamapps\\common\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir");
+        }
+        //epic
+        if (await pathExists("C:\\Program Files\\Epic Games\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir")) {
+            return path.resolve("C:\\Program Files\\Epic Games\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir");
+        }
+        // microsoft store
+        if (await pathExists(process.env.HOME + "\\TabletopPlayground\\Packages")) {
+            return path.resolve(process.env.HOME + "\\TabletopPlayground\\Packages");
         }
     }
     return null;
