@@ -10,13 +10,19 @@ Yarn (more on why in a minute)
 ## Usage
 
 typescript:
+
 `yarn create ttpg-package my-package --template ts` (recommended)
+
 or
+
 `npx create-ttpg-package my-package --template ts`
 
 vanilla javascript:
+
 `yarn create ttpg-package my-package --template js`
+
 or
+
 `npx create-ttpg-package my-package --template js`
 
 ## Directories of Interest...
