@@ -4,8 +4,8 @@ create-ttpg-package is a way to start building a new package for Tabletop Playgr
 
 ## Requirements
 
-Node (v16+ recommended)
-Yarn (more on why in a minute)
+- Node (v16+ recommended)
+- Yarn (more on why in a minute)
 
 ## Usage
 
