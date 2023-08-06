@@ -18,18 +18,43 @@ const TEMPLATE_ALIASES = {
 
 const SUPPORTED_TEMPLATES: (keyof typeof TEMPLATE_ALIASES)[] = ["javascript", "typescript", "ts", "js"];
 
+export const Logger = {
+    log: (...messages: string[]) => console.log(chalk.white(messages.join(" "))),
+    notice: (...messages: string[]) => console.log(chalk.blueBright(messages.join(" "))),
+    error: (...messages: string[]) => console.error(chalk.redBright(messages.join(" "))),
+    success: (...messages: string[]) => console.error(chalk.greenBright(messages.join(" "))),
+    warning: (...messages: string[]) => console.error(chalk.yellowBright(messages.join(" "))),
+    welcome: () => console.log(chalk.cyanBright(chalk.underline("Good Morning, Captain!"))),
+    complete: () => console.log(chalk.cyanBright(chalk.underline("Good Hunting!"))),
+};
+
 const runInstaller = async (cwd: string) => {
     return new Promise((resolve, reject) => {
         const child = spawn("yarn", ["install"], { stdio: "pipe", cwd });
+        child.on("error", (e) => reject(e));
         child.on("close", (code: number) => (code > 0 ? reject(code) : resolve(0)));
     });
 };
 
-const getSuggestedTTPGPath = (): string | null => {
+export const pathExists = async (p: string) => {
+    const thePath = path.resolve(p);
+    try {
+        await fs.access(thePath);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+const getSuggestedTTPGPath = async (): Promise<string | null> => {
     if (process.platform === "darwin") {
-        return path.resolve(process.env.HOME + "/Library/Application Support/Epic/TabletopPlayground/Package");
+        if (await pathExists(process.env.HOME + "/Library/Application Support/Epic/TabletopPlayground/Package")) {
+            return path.resolve(process.env.HOME + "/Library/Application Support/Epic/TabletopPlayground/Package");
+        }
     } else if (process.platform === "win32") {
-        return path.resolve("C:\\Program Files (x86)\\Steam\\steamapps\\common\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir");
+        if (await pathExists("C:\\Program Files (x86)\\Steam\\steamapps\\common\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir")) {
+            return path.resolve("C:\\Program Files (x86)\\Steam\\steamapps\\common\\TabletopPlayground\\TabletopPlayground\\PersistentDownloadDir");
+        }
     }
     return null;
 };
@@ -42,65 +67,89 @@ const buildProject = async () => {
         output: process.stdout,
     });
 
-    const projectName = process.argv[2] ?? (await input.question(chalk.whiteBright("Enter an identifier for your project (no spaces, please): ")));
+    let projectId = process.argv.slice(2).find((g) => !g.startsWith("-"));
+    let idProvided = true;
+    const autoConfirm = process.argv.includes("-y");
 
-    if (!projectName) {
-        console.error(chalk.redBright("Project Title is Required"));
-        process.exit(-1);
+    if (!projectId) {
+        projectId = await input.question(chalk.whiteBright("Enter a name for your package: "));
+        idProvided = false;
+        if (!projectId) {
+            throw Error("project title is required");
+        }
     }
 
-    const projectSlug = projectName.split("/").pop() ?? projectName;
+    const projectTitle = !idProvided ? projectId : await input.question(chalk.whiteBright("Enter a name for your package: "));
 
-    const template = process.argv.indexOf("--template") > -1 ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
-
-    if (!SUPPORTED_TEMPLATES.includes(template as keyof typeof TEMPLATE_ALIASES)) {
-        console.error(chalk.redBright(`unknown template '${template}'`));
-        process.exit(-1);
-    }
-
-    const projectDir = path.resolve(process.cwd(), projectSlug);
-    const templateDir = path.resolve(__dirname, "..", "templates", TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES]);
-
-    try {
-        await fs.mkdir(projectDir, { recursive: true });
-    } catch (e) {
-        console.error(chalk.redBright("could not create project folder"));
-        throw e;
-    }
-    try {
-        await fs.cp(templateDir, projectDir, { recursive: true });
-        await fs.rename(path.join(projectDir, "gitignore"), path.join(projectDir, ".gitignore"));
-        await fs.rename(path.join(projectDir, "template.json"), path.join(projectDir, "package.json"));
-    } catch (e) {
-        console.error(chalk.redBright("could not copy template into project folder"));
-        throw e;
-    }
-    const projectPackage = JSON.parse(await fs.readFile(path.join(projectDir, "package.json"), "utf-8"));
-    projectPackage.name = projectName;
-    await fs.writeFile(path.join(projectDir, "package.json"), JSON.stringify(projectPackage, null, 2));
-
-    const projectTitle = await input.question(chalk.whiteBright("What is your packages title?"));
     if (projectTitle) {
-        const suggestedPrdGuid = guid();
-        const inputPrdGuid = (await input.question(chalk.whiteBright(`Provide a production GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggestedPrdGuid)}]: `))).trim();
-        const prdGuid = inputPrdGuid !== "" ? inputPrdGuid : suggestedPrdGuid;
-        const suggstedDevGuid = guid();
-        const inputDevGuid = (await input.question(chalk.whiteBright(`Provide a development GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggstedDevGuid)}]: `))).trim();
-        const devGuid = inputDevGuid !== "" ? inputDevGuid : suggstedDevGuid;
-        const suggestedTTPGPath = getSuggestedTTPGPath();
-        const input_ttpg_path = (await input.question(chalk.whiteBright(`What is your TTPG path ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))).trim();
-        const ttpg_path = input_ttpg_path !== "" ? input_ttpg_path : suggestedTTPGPath;
-        input.close();
+        const suggestedSlug = idProvided ? projectId : projectTitle.replace(/\W/g, "-").toLowerCase();
+        const inputSlug = autoConfirm || idProvided ? suggestedSlug : (await input.question(chalk.whiteBright(`Enter 'slug' identifier for your package [${chalk.white(suggestedSlug)}]: `))).trim();
+        const projectSlug = inputSlug !== "" ? inputSlug : suggestedSlug;
+
+        const template = process.argv.indexOf("--template") > -1 ? process.argv[process.argv.indexOf("--template") + 1] ?? "javascript" : "javascript";
+
+        if (!SUPPORTED_TEMPLATES.includes(template as keyof typeof TEMPLATE_ALIASES)) {
+            throw Error("unrecognized template");
+        }
+
+        const projectDir = path.resolve(process.cwd(), idProvided ? projectId : projectSlug);
+        const templateDir = path.resolve(__dirname, "..", "templates", TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES]);
+
+        Logger.log("creating workspace directory");
         try {
-            await Promise.all(ASSET_DIRS.map((dir) => fs.mkdir(path.join(projectDir, "assets", dir), { recursive: true })));
+            await fs.mkdir(projectDir, { recursive: true });
+            Logger.success("Workspace directory created");
         } catch (e) {
-            console.error(chalk.redBright("could not create asset directories"));
+            Logger.error("Could not create workspace directory");
             throw e;
         }
+        Logger.log("copying template...");
         try {
-            await fs.mkdir(path.join(projectDir, "dev"), { recursive: true });
+            await fs.cp(templateDir, projectDir, { recursive: true });
+            await fs.rename(path.join(projectDir, "gitignore"), path.join(projectDir, ".gitignore"));
+            await fs.rename(path.join(projectDir, "template.package.json"), path.join(projectDir, "package.json"));
+            if (template === "typescript") {
+                await fs.rename(path.join(projectDir, "template.tsconfig.json"), path.join(projectDir, "tsconfig.json"));
+            }
+            const projectPackage = JSON.parse(await fs.readFile(path.join(projectDir, "package.json"), "utf-8"));
+            projectPackage.name = projectSlug;
+            await fs.writeFile(path.join(projectDir, "package.json"), JSON.stringify(projectPackage, null, 2));
+            Logger.success("template copied");
+        } catch (e) {
+            Logger.error("could not copy template");
+            throw e;
+        }
+
+        const suggestedPrdGuid = guid();
+        const inputPrdGuid = autoConfirm
+            ? suggestedPrdGuid
+            : (await input.question(chalk.whiteBright(`Provide a production GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggestedPrdGuid)}]: `))).trim();
+        const prdGuid = inputPrdGuid !== "" ? inputPrdGuid : suggestedPrdGuid;
+        const suggestedDevGuid = guid();
+        const inputDevGuid = autoConfirm
+            ? suggestedDevGuid
+            : (await input.question(chalk.whiteBright(`Provide a development GUID for your package (or 'enter' to use the provided value) [${chalk.white(suggestedDevGuid)}]: `))).trim();
+        const devGuid = inputDevGuid !== "" ? inputDevGuid : suggestedDevGuid;
+        const suggestedTTPGPath = await getSuggestedTTPGPath();
+        const input_ttpg_path = autoConfirm
+            ? suggestedTTPGPath
+            : (await input.question(chalk.whiteBright(`What is your TTPG path ${suggestedTTPGPath ? `[${chalk.white(suggestedTTPGPath)}]: ` : ": "}`))).trim();
+        const ttpg_path = input_ttpg_path !== "" ? input_ttpg_path : suggestedTTPGPath;
+
+        input.close();
+        Logger.log("creating asset directories...");
+        try {
+            await Promise.all(ASSET_DIRS.map((dir) => fs.mkdir(path.join(projectDir, "assets", dir), { recursive: true })));
+            Logger.success("asset directories created");
+        } catch (e) {
+            Logger.error("could not create asset directories");
+            throw e;
+        }
+        Logger.log("creating dev directory...");
+        try {
+            await fs.mkdir(path.join(projectDir, "dev", projectSlug), { recursive: true });
             await fs.writeFile(
-                path.join(projectDir, "dev", "Manifest.json"),
+                path.join(projectDir, "dev", projectSlug, "Manifest.json"),
                 JSON.stringify(
                     {
                         Name: `${projectTitle} (Dev)`,
@@ -112,11 +161,13 @@ const buildProject = async () => {
                 ),
                 "utf-8"
             );
-            await Promise.all(ASSET_DIRS.map((dir) => fs.symlink(path.join(projectDir, "assets", dir), path.join(projectDir, "dev", dir), "junction")));
+            await Promise.all(ASSET_DIRS.map((dir) => fs.symlink(path.join(projectDir, "assets", dir), path.join(projectDir, "dev", projectSlug, dir), "junction")));
+            Logger.success("dev directory created");
         } catch (e) {
-            console.error(chalk.redBright("could not create dev directory"));
+            Logger.error("could not create dev directory");
             throw e;
         }
+        Logger.log("writing project config");
         try {
             await fs.writeFile(
                 path.join(projectDir, "ttpgcfg.project.json"),
@@ -134,35 +185,41 @@ const buildProject = async () => {
                     2
                 )
             );
+            Logger.success("project config written");
         } catch (e) {
-            console.error(chalk.redBright("Could not write project config file"));
+            Logger.error("could not write project config file");
             throw e;
         }
         if (ttpg_path) {
+            Logger.log("writing local config...");
             try {
                 await fs.writeFile(path.join(projectDir, "ttpgcfg.local.json"), JSON.stringify({ ttpg_path }, null, 2), "utf-8");
+                Logger.success("local config created");
             } catch (e) {
-                console.warn(chalk.redBright("Could not write local config file, you will need to run the setup script"));
+                Logger.warning("could not write local config file");
             }
         } else {
-            console.warn(chalk.yellowBright("No ttpg path provided, you will need to run the setup script later"));
+            Logger.warning("no ttpg path provided - skipping local config creation");
+        }
+        Logger.log("installing workspace dependencies...");
+        try {
+            await runInstaller(projectDir);
+            Logger.success("workspace dependencies installed");
+        } catch (e) {
+            Logger.error("could not install workspace dependencies");
+            throw e;
         }
     } else {
-        console.warn(chalk.yellowBright("No title was provided, you will need to run the setup script later"));
-    }
-    try {
-        await runInstaller(projectDir);
-    } catch (e) {
-        console.error(chalk.redBright("Could not run installer"));
-        throw e;
+        throw Error("project title is required");
     }
 };
 
+Logger.welcome();
 buildProject()
     .then(() => {
-        console.log(chalk.greenBright("Good Hunting!"));
+        Logger.complete();
     })
     .catch((e) => {
-        console.error(chalk.redBright("Something when wrong"));
+        Logger.error("something went wrong");
         console.error(e);
     });

@@ -1,6 +1,6 @@
 {
   "name": "create-ttpg-package",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "",
   "bin": {
     "create-ttpg-package": "bin/index.js"
@@ -10,7 +10,7 @@
     "./templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -rp ./templates ./bin/",
     "clean": "rm -rf ./bin",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
