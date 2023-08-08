@@ -140,7 +140,7 @@ const buildProject = async () => {
             await fs.cp(templateDir, projectDir, { recursive: true });
             await fs.rename(path.join(projectDir, "gitignore"), path.join(projectDir, ".gitignore"));
             await fs.rename(path.join(projectDir, "template.package.json"), path.join(projectDir, "package.json"));
-            if (TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES] === "typescript") {
+            if (await pathExists(path.join(projectDir, "template.tsconfig.json"))) {
                 await fs.rename(path.join(projectDir, "template.tsconfig.json"), path.join(projectDir, "tsconfig.json"));
             }
             const projectPackage = JSON.parse(await fs.readFile(path.join(projectDir, "package.json"), "utf-8"));
