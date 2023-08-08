@@ -1,5 +1,5 @@
 {
-    "name": "tsx-template",
+    "name": "typescript-template",
     "version": "0.0.1",
     "scripts": {
         "setup": "ttpg-scripts setup",
@@ -11,9 +11,13 @@
       },
     "keywords": [],
     "author": "",
+    "dependencies": {
+      "jsx-in-ttpg": "^1.0.0"
+    },
     "devDependencies": {
-      "@tabletop-playground/api": "^0.36.1",
-      "ttpg-scripts": "^1.1.0"
+        "@tabletop-playground/api": "^0.36.1",
+        "ttpg-scripts": "^1.1.0",
+        "typescript": "^5.1.6"
     }
   }
   

@@ -14,9 +14,12 @@ const TEMPLATE_ALIASES = {
     typescript: "typescript",
     js: "javascript",
     ts: "typescript",
+    tsx: "tsx",
 } as const;
 
-const SUPPORTED_TEMPLATES: (keyof typeof TEMPLATE_ALIASES)[] = ["javascript", "typescript", "ts", "js"];
+const NEEDS_TRANSPILE = ["typescript", "tsx"];
+
+const SUPPORTED_TEMPLATES: (keyof typeof TEMPLATE_ALIASES)[] = ["javascript", "typescript", "ts", "js", "tsx"];
 
 export const Logger = {
     log: (...messages: string[]) => console.log(chalk.white(messages.join(" "))),
@@ -190,7 +193,7 @@ const buildProject = async () => {
                         name: projectTitle,
                         slug: projectSlug,
                         version: projectVersion,
-                        template: TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES],
+                        transpile: NEEDS_TRANSPILE.includes(TEMPLATE_ALIASES[template as keyof typeof TEMPLATE_ALIASES]),
                         guid: {
                             dev: devGuid,
                             prd: prdGuid,
