@@ -12,7 +12,7 @@
     "keywords": [],
     "author": "",
     "dependencies": {
-      "jsx-in-ttpg": "^1.1.1"
+      "jsx-in-ttpg": "^1.1.2"
     },
     "devDependencies": {
         "@tabletop-playground/api": "^0.36.1",

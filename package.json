@@ -1,6 +1,6 @@
 {
   "name": "create-ttpg-package",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "bin": {
     "create-ttpg-package": "bin/index.js"
