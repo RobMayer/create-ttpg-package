@@ -4,26 +4,22 @@ create-ttpg-package is a way to start building a new package for Tabletop Playgr
 
 ## Requirements
 
-- Node (v16+ recommended)
-- Yarn (more on why in a minute)
+-   Node (v16+ recommended)
+-   Yarn (more on why in a minute)
 
 ## Usage
 
+typescript with JSX:
+
+`yarn create ttpg-package my-package --template tsx`
+
 typescript:
 
-`yarn create ttpg-package my-package --template ts` (recommended)
-
-or
-
-`npx create-ttpg-package my-package --template ts`
+`yarn create ttpg-package my-package --template typescript`
 
 vanilla javascript:
 
-`yarn create ttpg-package my-package --template js`
-
-or
-
-`npx create-ttpg-package my-package --template js`
+`yarn create ttpg-package my-package --template javascript`
 
 ## Directories of Interest...
 
