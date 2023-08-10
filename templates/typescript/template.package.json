@@ -7,13 +7,15 @@
         "clean": "ttpg-scripts clean",
         "reset": "ttpg-scripts reset",
         "build": "ttpg-scripts build",
-        "purge": "ttpg-scripts purge"
+        "purge": "ttpg-scripts purge",
+        "libpack": "ttpg-script libpack",
+        "watch": "ttpg-script watch"
       },
     "keywords": [],
     "author": "",
     "devDependencies": {
        "@tabletop-playground/api": "^0.36.1",
-        "ttpg-scripts": "^1.1.0",
+       "ttpg-scripts": "^1.2.0",
         "typescript": "^5.1.6"
     }
   }
