@@ -8,8 +8,8 @@
         "reset": "ttpg-scripts reset",
         "build": "ttpg-scripts build",
         "purge": "ttpg-scripts purge",
-        "libpack": "ttpg-script libpack",
-        "watch": "ttpg-script watch"
+        "libpack": "ttpg-scripts libpack",
+        "watch": "ttpg-scripts watch"
       },
     "keywords": [],
     "author": "",

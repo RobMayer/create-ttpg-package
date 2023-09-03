@@ -8,13 +8,13 @@
         "reset": "ttpg-scripts reset",
         "build": "ttpg-scripts build",
         "purge": "ttpg-scripts purge",
-        "libpack": "ttpg-script libpack",
-        "watch": "ttpg-script watch"
+        "libpack": "ttpg-scripts libpack",
+        "watch": "ttpg-scripts watch"
       },
     "keywords": [],
     "author": "",
     "dependencies": {
-      "jsx-in-ttpg": "^1.2.1"
+      "jsx-in-ttpg": "^1.2.2"
     },
     "devDependencies": {
         "@tabletop-playground/api": "^0.36.1",
