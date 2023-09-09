@@ -9,13 +9,14 @@
         "build": "ttpg-scripts build",
         "purge": "ttpg-scripts purge",
         "libpack": "ttpg-scripts libpack",
-        "watch": "ttpg-scripts watch"
+        "watch": "ttpg-scripts watch",
+        "postpublish": "ttpg-scripts postpublish"
       },
     "keywords": [],
     "author": "",
     "devDependencies": {
        "@tabletop-playground/api": "^0.36.1",
-       "ttpg-scripts": "^1.2.1",
+       "ttpg-scripts": "^1.4.0",
         "typescript": "^5.1.6"
     }
   }
