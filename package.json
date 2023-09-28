@@ -1,31 +1,31 @@
 {
-  "name": "create-ttpg-package",
-  "version": "1.2.0",
-  "description": "",
-  "bin": {
-    "create-ttpg-package": "bin/index.js"
-  },
-  "files": [
-    "./bin",
-    "./templates"
-  ],
-  "scripts": {
-    "build": "tsc && cp -rp ./templates ./bin/",
-    "clean": "rm -rf ./bin",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "UNLICENSE",
-  "devDependencies": {
-    "@types/cross-spawn": "^6.0.2",
-    "@types/node": "^20.4.8",
-    "@types/uuid": "^9.0.2",
-    "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "colorette": "^2.0.20",
-    "cross-spawn": "^7.0.3",
-    "uuid": "^9.0.0"
-  }
+    "name": "create-ttpg-package",
+    "version": "1.2.0",
+    "description": "",
+    "bin": {
+        "create-ttpg-package": "bin/index.js"
+    },
+    "files": [
+        "./bin",
+        "./templates"
+    ],
+    "scripts": {
+        "build": "tsc && cp -rp ./templates ./bin/",
+        "clean": "rm -rf ./bin",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "UNLICENSE",
+    "devDependencies": {
+        "@types/cross-spawn": "^6.0.3",
+        "@types/node": "^20.7.1",
+        "@types/uuid": "^9.0.4",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "colorette": "^2.0.20",
+        "cross-spawn": "^7.0.3",
+        "uuid": "^9.0.1"
+    }
 }

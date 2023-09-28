@@ -11,16 +11,15 @@
         "libpack": "ttpg-scripts libpack",
         "watch": "ttpg-scripts watch",
         "postpublish": "ttpg-scripts postpublish"
-      },
+    },
     "keywords": [],
     "author": "",
     "dependencies": {
-      "jsx-in-ttpg": "^1.3.7"
+        "jsx-in-ttpg": "^2.0.0"
     },
     "devDependencies": {
-        "@tabletop-playground/api": "^0.36.1",
+        "@tabletop-playground/api": "^0.37.0",
         "ttpg-scripts": "^1.4.0",
         "typescript": "^5.1.6"
     }
-  }
-  
+}
