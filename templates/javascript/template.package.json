@@ -15,7 +15,7 @@
     "keywords": [],
     "author": "",
     "devDependencies": {
-        "@tabletop-playground/api": "^0.37.0",
-        "ttpg-scripts": "^1.4.0"
+        "@tabletop-playground/api": "^0.38.0",
+        "ttpg-scripts": "^1.4.1"
     }
 }
