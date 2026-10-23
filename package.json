@@ -1,7 +1,11 @@
 {
     "name": "create-ttpg-package",
-    "version": "1.4.2",
+    "version": "1.6.0",
     "description": "",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RobMayer/create-ttpg-package.git"
+    },
     "bin": {
         "create-ttpg-package": "bin/index.js"
     },
@@ -17,6 +21,7 @@
     "keywords": [],
     "author": "",
     "license": "UNLICENSE",
+    "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72",
     "devDependencies": {
         "@types/cross-spawn": "^6.0.6",
         "@types/node": "^20.10.6",

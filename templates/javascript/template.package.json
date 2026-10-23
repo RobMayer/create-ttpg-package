@@ -16,6 +16,6 @@
     "author": "",
     "devDependencies": {
         "@tabletop-playground/api": "^0.41.0",
-        "ttpg-scripts": "^1.5.0"
+        "ttpg-scripts": "^1.6.0"
     }
 }

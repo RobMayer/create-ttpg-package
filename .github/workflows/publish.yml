@@ -4,31 +4,26 @@ on:
         types: [created]
 
 jobs:
-    publish-gpr:
+    publish:
         runs-on: ubuntu-latest
         permissions:
             contents: read
             packages: write
+            id-token: write
         steps:
             - name: Setup Repo
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
             - name: Setup PNPM
-              uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+              uses: pnpm/action-setup@v4
             - name: Setup Node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 24
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm"
-            - name: Install Deps
+            - name: Update npm
+              run: npm install -g npm@latest
+            - name: Install Dependencies
               run: pnpm install --frozen-lockfile
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-            - name: Lint and Build
-              run: pnpm run build
-            - name: Publish
-              run: pnpm publish --no-git-checks
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            - name: Lint, Build, and Publish
+              run: npm publish --access public --provenance
